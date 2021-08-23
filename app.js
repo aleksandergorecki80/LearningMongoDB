@@ -1,14 +1,23 @@
+console.log(process.env.NODE_ENV)
+
 const path = require('path');
-
 const express = require('express');
-const bodyParser = require('body-parser');
-
+// const bodyParser = require('body-parser');
 const productRoutes = require('./routes/products');
 const authRoutes = require('./routes/auth');
+const connectDB = require('./config/db');
 
 const app = express();
 
-app.use(bodyParser.json());
+
+
+
+// Connect DB
+connectDB();
+
+// Init Middleware
+app.use(express.json({ extended: false }));
+
 app.use('/images', express.static(path.join('backend/images')));
 
 app.use((req, res, next) => {
@@ -24,5 +33,7 @@ app.use((req, res, next) => {
 
 app.use('/products', productRoutes);
 app.use('/', authRoutes);
+
+
 
 app.listen(3100);
