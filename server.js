@@ -9,16 +9,13 @@ const connectDB = require('./config/db');
 
 const app = express();
 
-
-
-
 // Connect DB
 connectDB();
 
 // Init Middleware
 app.use(express.json({ extended: false }));
 
-app.use('/images', express.static(path.join('backend/images')));
+app.use('/images', express.static(path.join('images')));
 
 app.use((req, res, next) => {
   // Set CORS headers so that the React SPA is able to communicate with this server
@@ -31,9 +28,13 @@ app.use((req, res, next) => {
   next();
 });
 
+// Define routes
+
 app.use('/products', productRoutes);
 app.use('/', authRoutes);
 
 
-
-app.listen(3100);
+const PORT = 3100;
+app.listen(PORT, () =>{
+  console.log(`Server is running at ${PORT}`);
+});

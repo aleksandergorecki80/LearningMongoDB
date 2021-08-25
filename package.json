@@ -20,7 +20,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "dev:server": "SET \"NODE_ENV=dev\"&& node app.js",
-    "start:server": "node app.js"
+    "dev:server": "SET \"NODE_ENV=dev\"&& nodemon server.js",
+    "start:server": "nodemon server.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }

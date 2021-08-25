@@ -1,6 +1,8 @@
-const Router = require('express').Router;
-
-const router = Router();
+const express = require('express');
+const router = express.Router();
+const Product = require('../models/ProductModel');
+const mongodb = require('mongodb');
+const Decimal128 = mongodb.Decimal128;
 
 const products = [
   {
@@ -75,15 +77,24 @@ router.get('/:id', (req, res, next) => {
 
 // Add new product
 // Requires logged in user
-router.post('', (req, res, next) => {
-  const newProduct = {
-    name: req.body.name,
-    description: req.body.description,
-    price: parseFloat(req.body.price), // store this as 128bit decimal in MongoDB
-    image: req.body.image
-  };
-  console.log(newProduct);
-  res.status(201).json({ message: 'Product added', productId: 'DUMMY' });
+router.post('', async (req, res, next) => {
+console.log(req.body);
+const priceString = req.body.price.toString()
+console.log(priceString)
+  try {
+    const newProduct = new Product({
+      name: req.body.name,
+      description: req.body.description,
+      price: Decimal128.fromString(priceString), // store this as 128bit decimal in MongoDB
+      image: req.body.image
+    });
+    const product = await newProduct.save()
+    console.log(newProduct);
+    res.status(201).json({ message: 'Product added', payload: product });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
 });
 
 // Edit existing product
